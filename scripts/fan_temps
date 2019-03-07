@@ -1155,7 +1155,7 @@ def get_smc_results():
         elif "IULC" in item:
             smcinfo['IULC'] = item.split(' ')[6].strip() #Thunderbolt Left Side Amps
         elif "IURC" in item:
-            smcinfo['IURC'] = item.split(' ')[6].strip() #Thunderbold Right Side
+            smcinfo['IURC'] = item.split(' ')[6].strip() #Thunderbolt Right Side Amps
         elif "PCAM" in item:
             smcinfo['PCAM'] = item.split(' ')[6].strip() #CPU Core IMON Watts
         elif "PCEC" in item:

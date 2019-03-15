@@ -7,13 +7,9 @@ new Fan_temps_model;
 ?>
 
 <div class="container">
-
   <div class="row">
-
   	<div class="col-lg-12">
-
 		  <h3><span data-i18n="fan_temps.reporttitle_smc"></span> <span id="total-count" class='label label-primary'>…</span></h3>
-		  
 		  <table class="table table-striped table-condensed table-bordered">
 		    <thead>
 		      <tr>
@@ -22,18 +18,18 @@ new Fan_temps_model;
 		        <th data-i18n="fan_temps.alsl_short" data-colname='fan_temps.alsl'></th>
 		        <th data-i18n="fan_temps.msld_short" data-colname='fan_temps.msld'></th>
 		        <th data-i18n="fan_temps.mssd_short" data-colname='fan_temps.mssd'></th>
-		        <th data-i18n="fan_temps.discin_short" data-colname='fan_temps.discin'></th>
+		        <th data-i18n="fan_temps.msdi_short" data-colname='fan_temps.msdi'></th>
 		        <th data-i18n="fan_temps.mstm_short" data-colname='fan_temps.mstm'></th>
 		        <th data-i18n="fan_temps.lsof_short" data-colname='fan_temps.lsof'></th>
 		        <th data-i18n="fan_temps.spht_short" data-colname='fan_temps.spht'></th>
 		        <th data-i18n="fan_temps.sph0_short" data-colname='fan_temps.sph0'></th>
-		        <th data-i18n="fan_temps.sght" data-colname='fan_temps.sght'></th>
+		        <th data-i18n="fan_temps.SGHT" data-colname='fan_temps.sght'></th>
 		      </tr>
 		    </thead>
 		    <tbody>
 		    	<tr>
-					<td data-i18n="listing.loading" colspan="11" class="dataTables_empty"></td>
-				</tr>
+		    	   <td data-i18n="listing.loading" colspan="11" class="dataTables_empty"></td>
+		    	</tr>
 		    </tbody>
 		  </table>
     </div> <!-- /span 12 -->
@@ -79,7 +75,7 @@ new Fan_temps_model;
                 url: appUrl + '/datatables/data',
                 type: "POST",
                 data: function(d){
-                    d.mrColNotEmpty = "fan_temps.id";
+                    d.mrColNotEmpty = "fan_temps.mssd";
                         
                     // Check for column in search
                     if(d.search.value){
@@ -88,7 +84,6 @@ new Fan_temps_model;
                                 d.columns[index].search.value = '> 0';
                             }
                         });
-
                     };
                 }
             },
@@ -126,6 +121,7 @@ new Fan_temps_model;
 	        	columnvar = columnvar == '-2' ? i18n.t('fan_temps.shutdown_2_short') :
 	        	columnvar = columnvar == '-3' ? i18n.t('fan_temps.shutdown_3_short') :
 	        	columnvar = columnvar == '-4' ? i18n.t('fan_temps.shutdown_4_short') :
+	        	columnvar = columnvar == '-20' ? i18n.t('fan_temps.shutdown_20_short') :
 	        	columnvar = columnvar == '-30' ? i18n.t('fan_temps.shutdown_30_short') :
 	        	columnvar = columnvar == '-40' ? i18n.t('fan_temps.shutdown_40_short') :
 	        	columnvar = columnvar == '-50' ? i18n.t('fan_temps.shutdown_50_short') :
@@ -177,10 +173,8 @@ new Fan_temps_model;
 	        	columnvar = columnvar == '1' ? i18n.t('yes') :
 	        	(columnvar === '0' ? i18n.t('no') : '')
 	        	$('td:eq(10)', nRow).html(columnvar)
-                
 		    }
 	    });
-
 	});
 </script>
 

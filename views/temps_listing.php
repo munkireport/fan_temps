@@ -7,38 +7,33 @@ new Fan_temps_model;
 ?>
 
 <div class="container">
-
   <div class="row">
-
   	<div class="col-lg-12">
-
 		  <h3><span data-i18n="fan_temps.reporttitle_temps"></span> <span id="total-count" class='label label-primary'>…</span></h3>
-		  
 		  <table class="table table-striped table-condensed table-bordered">
 		    <thead>
 		      <tr>
 		      	<th data-i18n="listing.computername" data-colname='machine.computer_name'></th>
 		        <th data-i18n="serial" data-colname='reportdata.serial_number'></th>
-		        <th data-i18n="fan_temps.ta0p" data-colname='fan_temps.ta0p'></th>
-		        <th data-i18n="fan_temps.tc0f" data-colname='fan_temps.tc0f'></th>
-		        <th data-i18n="fan_temps.tc0d" data-colname='fan_temps.tc0d'></th>
+		        <th data-i18n="fan_temps.TA0P" data-colname='fan_temps.ta0p'></th>
+		        <th data-i18n="fan_temps.TC0F" data-colname='fan_temps.tc0f'></th>
+		        <th data-i18n="fan_temps.TC0D" data-colname='fan_temps.tc0d'></th>
 		        <th data-i18n="fan_temps.tc0p_short" data-colname='fan_temps.tc0p'></th>
-		        <th data-i18n="fan_temps.tb0t" data-colname='fan_temps.tb0t'></th>
-		        <th data-i18n="fan_temps.tb1t" data-colname='fan_temps.tb1t'></th>
-		        <th data-i18n="fan_temps.tb2t" data-colname='fan_temps.tb2t'></th>
-		        <th data-i18n="fan_temps.tg0d" data-colname='fan_temps.tg0d'></th>
-		        <th data-i18n="fan_temps.tg0h" data-colname='fan_temps.tg0h'></th>
+		        <th data-i18n="fan_temps.TB0T" data-colname='fan_temps.tb0t'></th>
+		        <th data-i18n="fan_temps.TB1T" data-colname='fan_temps.tb1t'></th>
+		        <th data-i18n="fan_temps.TB2T" data-colname='fan_temps.tb2t'></th>
+		        <th data-i18n="fan_temps.TG0D" data-colname='fan_temps.tg0d'></th>
+		        <th data-i18n="fan_temps.TG0H" data-colname='fan_temps.tg0h'></th>
 		        <th data-i18n="fan_temps.tg0p_short" data-colname='fan_temps.tg0p'></th>
 		        <th data-i18n="fan_temps.tl0p_short" data-colname='fan_temps.tl0p'></th>
 		        <th data-i18n="fan_temps.th0p_short" data-colname='fan_temps.th0p'></th>
-		        <th data-i18n="fan_temps.th0h" data-colname='fan_temps.th0h'></th>
-		        <th data-i18n="fan_temps.th1h" data-colname='fan_temps.th0h'></th>
-		        <th data-i18n="fan_temps.th2h" data-colname='fan_temps.th2h'></th>
-		        <th data-i18n="fan_temps.tm0s" data-colname='fan_temps.tm0s'></th>
+		        <th data-i18n="fan_temps.T_h0H" data-colname='fan_temps.th0h'></th>
+		        <th data-i18n="fan_temps.T_h1H" data-colname='fan_temps.th1h'></th>
+		        <th data-i18n="fan_temps.T_h2H" data-colname='fan_temps.th2h'></th>
+		        <th data-i18n="fan_temps.TM0S" data-colname='fan_temps.tm0s'></th>
 		        <th data-i18n="fan_temps.tm0p_short" data-colname='fan_temps.tm0p'></th>
-		        <th data-i18n="fan_temps.ts0p" data-colname='fan_temps.ts0p'></th>
-		        <th data-i18n="fan_temps.tm0p_short" data-colname='fan_temps.tm0p'></th>
-		        <th data-i18n="fan_temps.tn0h" data-colname='fan_temps.tn0h'></th>
+		        <th data-i18n="fan_temps.T_s0P" data-colname='fan_temps.ts0p'></th>
+		        <th data-i18n="fan_temps.TN0H" data-colname='fan_temps.tn0h'></th>
 		        <th data-i18n="fan_temps.tn0d_short" data-colname='fan_temps.tn0d'></th>
 		        <th data-i18n="fan_temps.tn0p_short" data-colname='fan_temps.tn0p'></th>
 		        <th data-i18n="fan_temps.tp0p_short" data-colname='fan_temps.tp0p'></th>
@@ -46,8 +41,8 @@ new Fan_temps_model;
 		    </thead>
 		    <tbody>
 		    	<tr>
-					<td data-i18n="listing.loading" colspan="25" class="dataTables_empty"></td>
-				</tr>
+		             <td data-i18n="listing.loading" colspan="24" class="dataTables_empty"></td>
+		    	</tr>
 		    </tbody>
 		  </table>
     </div> <!-- /span 12 -->
@@ -102,7 +97,6 @@ new Fan_temps_model;
                                 d.columns[index].search.value = '> 0';
                             }
                         });
-
                     };
                 }
             },
@@ -119,6 +113,10 @@ new Fan_temps_model;
 	        	$('td:eq(0)', nRow).html(link);
 
                 var temperature_unit = "<?=conf('temperature_unit')?>";
+                // Check if temperature_unit exists, if not default to C
+                if (!temperature_unit){
+                    temperature_unit = "C"
+                }
                 
                 // 
                 var columnvar=$('td:eq(2)', nRow).html();
@@ -422,24 +420,8 @@ new Fan_temps_model;
                           $('td:eq(23)', nRow).html('<span title="'+temperature_f+'">'+temperature_c+'</span>');
                      }
                 }
-
-                // 
-                var columnvar=$('td:eq(24)', nRow).html();
-                if(columnvar == "") {
-                     $('td:eq(24)', nRow).html('');
-                } else{				 
-                     temperature_c = parseFloat((columnvar * 1).toFixed(2))+"°C";
-                     temperature_f = parseFloat(((columnvar * 9/5 ) + 32 ).toFixed(2))+"°F";
-                     if ( temperature_unit == "F" ){
-                          $('td:eq(24)', nRow).html('<span title="'+temperature_c+'">'+temperature_f+'</span>');
-                     } else{
-                          $('td:eq(24)', nRow).html('<span title="'+temperature_f+'">'+temperature_c+'</span>');
-                     }
-                }      
-                
 		    }
 	    });
-
 	});
 </script>
 

@@ -7,44 +7,35 @@ new Fan_temps_model;
 ?>
 
 <div class="container">
-
   <div class="row">
-
   	<div class="col-lg-12">
-
 		  <h3><span data-i18n="fan_temps.reporttitle_fans"></span> <span id="total-count" class='label label-primary'>…</span></h3>
-		  
 		  <table class="table table-striped table-condensed table-bordered">
 		    <thead>
 		      <tr>
 		      	<th data-i18n="listing.computername" data-colname='machine.computer_name'></th>
 		        <th data-i18n="serial" data-colname='reportdata.serial_number'></th>
-		        <th data-i18n="name" data-colname='fan_temps.fanlabel0'></th>
-		        <th data-i18n="fan_temps.speed" data-colname='fan_temps.fan_0'></th>
-		        <th data-i18n="fan_temps.minfan" data-colname='fan_temps.fanmin0'></th>
-		        <th data-i18n="fan_temps.maxfan" data-colname='fan_temps.fanmax0'></th>
-		        <th data-i18n="name" data-colname='fan_temps.fanlabel1'></th>
-		        <th data-i18n="fan_temps.speed" data-colname='fan_temps.fan_1'></th>
-		        <th data-i18n="fan_temps.minfan" data-colname='fan_temps.fanmin1'></th>
-		        <th data-i18n="fan_temps.maxfan" data-colname='fan_temps.fanmax1'></th>
-		        <th data-i18n="name" data-colname='fan_temps.fanlabel2'></th>
-		        <th data-i18n="fan_temps.speed" data-colname='fan_temps.fan_2'></th>
-		        <th data-i18n="fan_temps.minfan" data-colname='fan_temps.fanmin2'></th>
-		        <th data-i18n="fan_temps.maxfan" data-colname='fan_temps.fanmax2'></th>
+		        <th data-i18n="name" data-colname='fan_temps.f0id'></th>
+		        <th data-i18n="fan_temps.speed" data-colname='fan_temps.f0ac'></th>
+		        <th data-i18n="fan_temps.minfan" data-colname='fan_temps.f0mn'></th>
+		        <th data-i18n="fan_temps.maxfan" data-colname='fan_temps.f0mx'></th>
+		        <th data-i18n="name" data-colname='fan_temps.f1id'></th>
+		        <th data-i18n="fan_temps.speed" data-colname='fan_temps.f1ac'></th>
+		        <th data-i18n="fan_temps.minfan" data-colname='fan_temps.f1mn'></th>
+		        <th data-i18n="fan_temps.maxfan" data-colname='fan_temps.f1mx'></th>
+		        <th data-i18n="name" data-colname='fan_temps.f2id'></th>
+		        <th data-i18n="fan_temps.speed" data-colname='fan_temps.f2ac'></th>
+		        <th data-i18n="fan_temps.minfan" data-colname='fan_temps.f2mn'></th>
+		        <th data-i18n="fan_temps.maxfan" data-colname='fan_temps.f2mx'></th>
 		        <th data-i18n="fan_temps.fnfd_short" data-colname='fan_temps.fnfd'></th>
 		        <th data-i18n="fan_temps.mssf_short" data-colname='fan_temps.mssf'></th>
 		        <th data-i18n="fan_temps.fnum_short" data-colname='fan_temps.fnum'></th>
-		        <th data-i18n="fan_temps.dba0_short" data-colname='fan_temps.dba0'></th>
-		        <th data-i18n="fan_temps.dba1_short" data-colname='fan_temps.dba1'></th>
-		        <th data-i18n="fan_temps.dba2_short" data-colname='fan_temps.dba2'></th>
-		        <th data-i18n="fan_temps.dbah_short" data-colname='fan_temps.dbah'></th>
-		        <th data-i18n="fan_temps.dbat_short" data-colname='fan_temps.dbat'></th>
 		      </tr>
 		    </thead>
 		    <tbody>
 		    	<tr>
-					<td data-i18n="listing.loading" colspan="22" class="dataTables_empty"></td>
-				</tr>
+			   <td data-i18n="listing.loading" colspan="17" class="dataTables_empty"></td>
+		    	</tr>
 		    </tbody>
 		  </table>
     </div> <!-- /span 12 -->
@@ -90,7 +81,7 @@ new Fan_temps_model;
                 url: appUrl + '/datatables/data',
                 type: "POST",
                 data: function(d){
-                    d.mrColNotEmpty = "fan_temps.id";
+                    d.mrColNotEmpty = "fan_temps.f0mx";
                         
                     // Check for column in search
                     if(d.search.value){
@@ -99,7 +90,6 @@ new Fan_temps_model;
                                 d.columns[index].search.value = '> 0';
                             }
                         });
-
                     };
                 }
             },
@@ -178,54 +168,18 @@ new Fan_temps_model;
                      $('td:eq(13)', nRow).html(columnvar+" "+i18n.t('fan_temps.rpm'));
                 }
 
-	        	var columnvar=$('td:eq(14)', nRow).html();
-	        	columnvar = columnvar > '1' ? i18n.t('yes') :
-	        	(columnvar === '0' ? i18n.t('no') : '')
-	        	$('td:eq(14)', nRow).html(columnvar)
+                var columnvar=$('td:eq(14)', nRow).html();
+                columnvar = columnvar > '1' ? i18n.t('yes') :
+                (columnvar === '0' ? i18n.t('no') : '')
+                $('td:eq(14)', nRow).html(columnvar)
                 
-	        	var columnvar=$('td:eq(15)', nRow).html();
-	        	columnvar = columnvar == '1' ? i18n.t('yes') :
-	        	(columnvar === '0' ? i18n.t('no') : '')
-	        	$('td:eq(15)', nRow).html(columnvar)
-                
-                var columnvar=$('td:eq(17)', nRow).html();
-                if(columnvar == "") {
-                     $('td:eq(17)', nRow).html('');
-                } else{				 
-                     $('td:eq(17)', nRow).html(columnvar+" dBA");
-                }
-                
-                var columnvar=$('td:eq(18)', nRow).html();
-                if(columnvar == "") {
-                     $('td:eq(18)', nRow).html('');
-                } else{				 
-                     $('td:eq(18)', nRow).html(columnvar+" dBA");
-                }
-                
-                var columnvar=$('td:eq(19)', nRow).html();
-                if(columnvar == "") {
-                     $('td:eq(19)', nRow).html('');
-                } else{				 
-                     $('td:eq(19)', nRow).html(columnvar+" dBA");
-                }
-                
-                var columnvar=$('td:eq(20)', nRow).html();
-                if(columnvar == "") {
-                     $('td:eq(20)', nRow).html('');
-                } else{				 
-                     $('td:eq(20)', nRow).html(columnvar+" dBDA");
-                }
-                
-                var columnvar=$('td:eq(21)', nRow).html();
-                if(columnvar == "") {
-                     $('td:eq(21)', nRow).html('');
-                } else{				 
-                     $('td:eq(21)', nRow).html(columnvar+" dBDA");
-                }
-                
-		    }
-	    });
+                var columnvar=$('td:eq(15)', nRow).html();
+                columnvar = columnvar == '1' ? i18n.t('yes') :
+                (columnvar === '0' ? i18n.t('no') : '')
+                $('td:eq(15)', nRow).html(columnvar)
 
+             }
+	    });
 	});
 </script>
 

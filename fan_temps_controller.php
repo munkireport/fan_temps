@@ -171,14 +171,16 @@ class Fan_temps_controller extends Module_controller
         
         // Extract just the JSON string and make it an object
         $data_json = json_decode(json_decode(json_encode($fan_temps_tab[0]),true)['json_info']);
-        
-        // Add the temperature type to the object for the client tab
-        if(!conf('temperature_unit')){
-            $data_json->TEMPERATURE_UNIT = "C";
-        } else {
-            $data_json->TEMPERATURE_UNIT = conf('temperature_unit');
+
+        if(!is_null($data_json)){
+            // Add the temperature type to the object for the client tab
+            if(!conf('temperature_unit')){
+                $data_json->TEMPERATURE_UNIT = "C";
+            } else {
+                $data_json->TEMPERATURE_UNIT = conf('temperature_unit');
+            }
         }
-            
+
         $obj->view('json', array('msg' => current(array('msg' => $data_json)))); 
     }
 

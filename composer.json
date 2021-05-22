@@ -2,5 +2,5 @@
     "name": "munkireport/fan_temps",
     "description": "Fans, temperatures, and SMC module for munkireport.",
     "license": "MIT",
-    "version": "6.0.0"
+    "version": "6.0.0-beta1"
 }

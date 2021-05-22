@@ -1,13 +1,12 @@
 <div class="col-lg-4 col-md-6">
-    <div class="panel panel-default" id="fan_temps_bad_fans-widget">
-        <div id="fan_temps_bad_fans-widget" class="panel-heading" data-container="body">
-            <h3 class="panel-title"><i class="fa fa-asterisk"></i> 
-                <span data-i18n="fan_temps.MSSF"></span>
-                <list-link data-url="/show/listing/fan_temps/fans"></list-link>
-            </h3>
+    <div class="card" id="fan_temps_bad_fans-widget">
+        <div id="fan_temps_bad_fans-widget" class="card-header" data-container="body">
+            <i class="fa fa-asterisk"></i> 
+            <span data-i18n="fan_temps.MSSF"></span>
+            <a href="/show/listing/fan_temps/fans" class="pull-right"><i class="fa fa-list"></i></a>
         </div>
-        <div class="panel-body text-center"></div>
-    </div><!-- /panel -->
+        <div class="card-body text-center"></div>
+    </div>
 </div><!-- /col -->
 
 <script>
@@ -19,7 +18,7 @@ $(document).on('appUpdate', function(e, lang) {
             return;
         }
 
-        var panel = $('#fan_temps_bad_fans-widget div.panel-body'),
+        var panel = $('#fan_temps_bad_fans-widget div.card-body'),
         baseUrl = appUrl + '/show/listing/fan_temps/fans/';
         panel.empty();
         // Set blocks, disable if zero

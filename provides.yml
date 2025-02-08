@@ -2,6 +2,7 @@ client_tabs:
     amps-tab:
         view: amps_tab
         i18n: fan_temps.tabtitle_amps
+        badge: amps-cnt
     fans-tab:
         view: fans_tab
         i18n: fan_temps.tabtitle_fans

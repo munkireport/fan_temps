@@ -19,13 +19,22 @@ $(document).on('appReady', function(){
             $('#temps-msg').text(i18n.t('no_data'));
             $('#smc-msg').text(i18n.t('no_data'));
             
+            // Clear the counter when no data
+            $('#amps-cnt').text("");
+            
         } else {
-
             // Hide loading/no data message
             $('#apms-msg').text('');
             $('#fans-msg').text('');
             $('#temps-msg').text('');
             $('#smc-msg').text('');
+
+            // Update power consumption in menu
+            if(data['PSTR']) {
+                $('#amps-cnt').text(Math.round(data['PSTR']) + ' W');
+            } else {
+                $('#amps-cnt').text("");
+            }
 
             var skipThese = ['TEMPERATURE_UNIT'];
             var amps_rows = ''
@@ -257,8 +266,8 @@ $(document).on('appReady', function(){
                 }
             }
 
-            // Only show and sort amps table if data exists
-            if (amps_rows !== ""){
+            // Build and append tables only if they have content
+            if (amps_rows) {
                 $('#amps-tab')
                     .append($('<h4>')
                         .append($('<i>')
@@ -269,11 +278,9 @@ $(document).on('appReady', function(){
                             .addClass('table table-striped table-condensed')
                             .append($('<tbody id="amps_table">')
                                 .append(amps_rows))))
-                sortTable_temps(amps_table);
             }
 
-            // Only show and sort volts table if data exists
-            if ( volts_rows !== ""){
+            if (volts_rows) {
                 $('#amps-tab')
                     .append($('<h4>')
                         .append($('<i>')
@@ -284,11 +291,9 @@ $(document).on('appReady', function(){
                             .addClass('table table-striped table-condensed')
                             .append($('<tbody id="volts_table">')
                                 .append(volts_rows))))
-                sortTable_temps(volts_table);
             }
 
-            // Only show and sort watts table if data exists
-            if ( watts_rows !== ""){
+            if (watts_rows) {
                 $('#amps-tab')
                     .append($('<h4>')
                         .append($('<i>')
@@ -299,33 +304,27 @@ $(document).on('appReady', function(){
                             .addClass('table table-striped table-condensed')
                             .append($('<tbody id="watts_table">')
                                 .append(watts_rows))))
-                sortTable_temps(watts_table);
             }
 
-            // Only show and sort smc table if data exists
-            if ( smc_rows !== ""){
+            if (smc_rows) {
                 $('#smc-tab')
                     .append($('<div style="max-width:575px;">')
                         .append($('<table>')
                             .addClass('table table-striped table-condensed')
                             .append($('<tbody id="smc_table">')
                                 .append(smc_rows))))
-                sortTable_temps(smc_table);
             }
 
-            // Only show and sort temps table if data exists
-            if ( temps_rows !== ""){
+            if (temps_rows) {
                 $('#temps-tab')
                     .append($('<div style="max-width:370px;">')
                         .append($('<table>')
                             .addClass('table table-striped table-condensed')
                             .append($('<tbody id="temps_table">')
                                 .append(temps_rows))))
-                sortTable_temps(temps_table);
             }
 
-            // Only show fan table if data exists, do not sort it
-            if ( fan_rows !== ""){
+            if (fan_rows) {
                 $('#fans-tab')
                     .append($('<div style="max-width:370px;">')
                         .append($('<table>')

@@ -1,0 +1,8 @@
+type: scrollbox
+widget_id: fan_temps-keyboard-language-scrollbox-widget
+api_url: /module/fan_temps/get_list/keyboard_language
+i18n_title: fan_temps.widget.keyboard_language_title
+icon: fa-keyboard-o
+listing_link: /show/listing/fan_temps/smc
+search_key: label
+badge: count 

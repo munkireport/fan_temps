@@ -5,7 +5,7 @@
         <i class="btn btn-default tab-btn fa fa-list"></i>
     </a>
 </div> -->
-<h2 data-i18n="fan_temps.tabtitle_amps"></h2>
+<h2><i class="fa fa-power-off"></i> <span data-i18n="fan_temps.tabtitle_amps"></span></h2>
 
 <div id="apms-msg" data-i18n="listing.loading" class="col-lg-12 text-center"></div>
 
@@ -36,6 +36,48 @@ $(document).on('appReady', function(){
                 $('#amps-cnt').text("");
             }
 
+            // Find highest temperature for temps badge
+            var highestTemp = 0;
+            for (var prop in data) {
+                if (prop.startsWith('T') && i18n.t('fan_temps.' + escape_lower_case(prop)) !== 'fan_temps.' + escape_lower_case(prop)) {
+                    var temp = parseFloat(data[prop]);
+                    if (!isNaN(temp) && temp >= -50 && temp <= 150) {
+                        if (temp > highestTemp) {
+                            highestTemp = temp;
+                        }
+                    }
+                }
+            }
+
+            // Add highest temp to temps badge
+            if (highestTemp > 0) {
+                if (data['TEMPERATURE_UNIT'] == "F") {
+                    $('#temps-cnt').text(((highestTemp * 9/5) + 32).toFixed(1) + '°F');
+                } else {
+                    $('#temps-cnt').text(highestTemp.toFixed(1) + '°C');
+                }
+            } else {
+                $('#temps-cnt').text("");
+            }
+
+            // Find highest fan speed
+            var highestSpeed = 0;
+            for (var prop in data) {
+                if (prop.startsWith('F') && prop.endsWith('Ac')) {  // Only look at current speeds (Ac suffix)
+                    var speed = parseFloat(data[prop]);
+                    if (!isNaN(speed) && speed > highestSpeed) {
+                        highestSpeed = speed;
+                    }
+                }
+            }
+
+            // Add highest fan speed to fans badge or remove if no fans
+            if (highestSpeed > 0) {
+                $('#fans-cnt').text(Math.round(highestSpeed) + ' RPM');
+            } else {
+                $('#fans-cnt').text("");
+            }
+
             var skipThese = ['TEMPERATURE_UNIT'];
             var amps_rows = ''
             var fan_rows = ''
@@ -51,8 +93,17 @@ $(document).on('appReady', function(){
                     if (data[prop] == null){
                        // Do nothing for nulls to blank them
 
-                    } else if ((prop == "keyboard_language" || prop == "idle_time") && data[prop] !== ""){
-                  smc_rows = smc_rows + '<tr><th>'+i18n.t('fan_temps.'+prop)+'</th><td>'+data[prop]+'</td></tr>';
+                    } else if (prop == "keyboard_language" && data[prop] !== ""){
+                        // Add flag after keyboard language
+                        let flagHtml = '';
+                        if (typeof window.getKeyboardLanguageFlag === 'function') {
+                            const flag = window.getKeyboardLanguageFlag(data[prop]);
+                            flagHtml = ' <span style="font-size: 1.1em; position: relative; top: 2px;" title="' + data[prop] + '">' + flag + '</span>';
+                        }
+                        smc_rows = smc_rows + '<tr><th>'+i18n.t('fan_temps.'+prop)+'</th><td>'+data[prop]+flagHtml+'</td></tr>';
+
+                    } else if (prop == "idle_time" && data[prop] !== ""){
+                        smc_rows = smc_rows + '<tr><th>'+i18n.t('fan_temps.'+prop)+'</th><td>'+data[prop]+'</td></tr>';
 
                     // Create fan speed table section
                     } else if (prop.startsWith("F") && prop.endsWith("Mn")){

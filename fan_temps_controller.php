@@ -176,4 +176,30 @@ class Fan_temps_controller extends Module_controller
         $fan_temps = new Fan_temps_model;
         $obj->view('json', array('msg' => $fan_temps->retrieve_records($serial_number)));
     }
+    
+    /**
+     * Get list data for widget
+     *
+     * @param string $column Column to summarize
+     **/
+    public function get_list($column = '')
+    {
+        if ($column == 'keyboard_language') {
+            $sql = "SELECT keyboard_language AS label, COUNT(*) AS count
+                    FROM fan_temps
+                    LEFT JOIN reportdata USING (serial_number)
+                    ".get_machine_group_filter()."
+                    AND keyboard_language IS NOT NULL 
+                    AND keyboard_language <> ''
+                    GROUP BY keyboard_language
+                    ORDER BY count DESC";
+                    
+            $obj = new View();
+            $queryobj = new Fan_temps_model();
+            $obj->view('json', array('msg' => $queryobj->query($sql)));
+        } else {
+            $obj = new View();
+            $obj->view('json', array('msg' => array()));
+        }
+    }
 } // End class Fan_temps_controller

@@ -6,7 +6,7 @@
         <i class="btn btn-default tab-btn fa fa-list"></i>
     </a>
 </div>
-<h2 data-i18n="fan_temps.tabtitle_temps"></h2>
+<h2><i class="fa fa-thermometer"></i> <span data-i18n="fan_temps.tabtitle_temps"></span></h2>
 
 <div id="temps-msg" data-i18n="listing.loading" class="col-lg-12 text-center"></div>
 

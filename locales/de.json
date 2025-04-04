@@ -205,5 +205,9 @@
   "TMAS": "Speichermodul 10",
   "TMBS": "Speichermodul 11",
   "TMCS": "Speichermodul 12",
-  "TS0C": "Erweiterungs-Slots"
+  "TS0C": "Erweiterungs-Slots",
+  "keyboard_language": "Tastatursprache",
+  "widget": {
+    "keyboard_language_title": "Tastatursprachen"
+  }
 }

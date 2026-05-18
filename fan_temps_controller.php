@@ -139,7 +139,11 @@ class Fan_temps_controller extends Module_controller
         // Remove serial number characters
         $serial_number = preg_replace("/[^A-Za-z0-9_\-]]/", '', $serial_number);
 
-        $sql = "SELECT json_info FROM fan_temps WHERE serial_number = '$serial_number'";
+        $sql = "SELECT json_info 
+                    FROM fan_temps 
+                    LEFT JOIN reportdata USING (serial_number)
+                    ".get_machine_group_filter()."
+                    AND serial_number = '$serial_number'";
 
         $obj = new View();
         $queryobj = new Fan_temps_model();

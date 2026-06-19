@@ -204,5 +204,9 @@
     "TMAS": "Mémoire Module 10",
     "TMBS": "Mémoire Module 11",
     "TMCS": "Mémoire Module 12",
-    "TS0C": "Slots d'expansion"
+    "TS0C": "Slots d'expansion",
+    "keyboard_language": "Langue du clavier",
+    "widget": {
+        "keyboard_language_title": "Langues de clavier"
+    }
 }

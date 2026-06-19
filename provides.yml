@@ -2,15 +2,18 @@ client_tabs:
     amps-tab:
         view: amps_tab
         i18n: fan_temps.tabtitle_amps
+        badge: amps-cnt
     fans-tab:
         view: fans_tab
         i18n: fan_temps.tabtitle_fans
+        badge: fans-cnt
     smc-tab:
         view: smc_tab
         i18n: fan_temps.tabtitle_smc
     temps-tab:
         view: temps_tab
         i18n: fan_temps.tabtitle_temps
+        badge: temps-cnt
 listings:
     fans:
         view: fans_listing
@@ -36,3 +39,5 @@ widgets:
         view: fan_temps_cpu_hot_widget
     fan_temps_gpu_overtemp:
         view: fan_temps_gpu_overtemp_widget
+    fan_temps_keyboard_language:
+        view: fan_temps_keyboard_language_widget

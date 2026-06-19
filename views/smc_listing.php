@@ -107,7 +107,15 @@
                 $('td:eq(3)', nRow).html(columnvar)
 
                 var columnvar=$('td:eq(4)', nRow).html();
+                columnvar = columnvar == '12' ? i18n.t('fan_temps.shutdown12_short') :
+                columnvar = columnvar == '11' ? i18n.t('fan_temps.shutdown11_short') :
+                columnvar = columnvar == '10' ? i18n.t('fan_temps.shutdown10_short') :
+                columnvar = columnvar == '9' ? i18n.t('fan_temps.shutdown9_short') :
+                columnvar = columnvar == '8' ? i18n.t('fan_temps.shutdown8_short') :
+                columnvar = columnvar == '7' ? i18n.t('fan_temps.shutdown7_short') :
+                columnvar = columnvar == '6' ? i18n.t('fan_temps.shutdown6_short') :
                 columnvar = columnvar == '5' ? i18n.t('fan_temps.shutdown5_short') :
+                columnvar = columnvar == '4' ? i18n.t('fan_temps.shutdown4_short') :
                 columnvar = columnvar == '3' ? i18n.t('fan_temps.shutdown3_short') :
                 columnvar = columnvar == '2' ? i18n.t('fan_temps.shutdown2_short') :
                 columnvar = columnvar == '1' ? i18n.t('fan_temps.shutdown1_short') :

@@ -1,5 +1,11 @@
 <div id="amps"></div>
-<h2 data-i18n="fan_temps.tabtitle_amps"></h2>
+
+<!-- <div id="lister" style="font-size: large; float: right;">
+    <a href="/show/listing/fan_temps/fan_temps" title="List">
+        <i class="btn btn-default tab-btn fa fa-list"></i>
+    </a>
+</div> -->
+<h2><i class="fa fa-power-off"></i> <span data-i18n="fan_temps.tabtitle_amps"></span></h2>
 
 <div id="apms-msg" data-i18n="listing.loading" class="col-lg-12 text-center"></div>
 
@@ -13,13 +19,64 @@ $(document).on('appReady', function(){
             $('#temps-msg').text(i18n.t('no_data'));
             $('#smc-msg').text(i18n.t('no_data'));
             
+            // Clear the counter when no data
+            $('#amps-cnt').text("");
+            
         } else {
-
             // Hide loading/no data message
             $('#apms-msg').text('');
             $('#fans-msg').text('');
             $('#temps-msg').text('');
             $('#smc-msg').text('');
+
+            // Update power consumption in menu
+            if(data['PSTR']) {
+                $('#amps-cnt').text(Math.round(data['PSTR']) + ' W');
+            } else {
+                $('#amps-cnt').text("");
+            }
+
+            // Find highest temperature for temps badge
+            var highestTemp = 0;
+            for (var prop in data) {
+                if (prop.startsWith('T') && i18n.t('fan_temps.' + escape_lower_case(prop)) !== 'fan_temps.' + escape_lower_case(prop)) {
+                    var temp = parseFloat(data[prop]);
+                    if (!isNaN(temp) && temp >= -50 && temp <= 150) {
+                        if (temp > highestTemp) {
+                            highestTemp = temp;
+                        }
+                    }
+                }
+            }
+
+            // Add highest temp to temps badge
+            if (highestTemp > 0) {
+                if (data['TEMPERATURE_UNIT'] == "F") {
+                    $('#temps-cnt').text(((highestTemp * 9/5) + 32).toFixed(1) + '°F');
+                } else {
+                    $('#temps-cnt').text(highestTemp.toFixed(1) + '°C');
+                }
+            } else {
+                $('#temps-cnt').text("");
+            }
+
+            // Find highest fan speed
+            var highestSpeed = 0;
+            for (var prop in data) {
+                if (prop.startsWith('F') && prop.endsWith('Ac')) {  // Only look at current speeds (Ac suffix)
+                    var speed = parseFloat(data[prop]);
+                    if (!isNaN(speed) && speed > highestSpeed) {
+                        highestSpeed = speed;
+                    }
+                }
+            }
+
+            // Add highest fan speed to fans badge or remove if no fans
+            if (highestSpeed > 0) {
+                $('#fans-cnt').text(Math.round(highestSpeed) + ' RPM');
+            } else {
+                $('#fans-cnt').text("");
+            }
 
             var skipThese = ['TEMPERATURE_UNIT'];
             var amps_rows = ''
@@ -36,8 +93,17 @@ $(document).on('appReady', function(){
                     if (data[prop] == null){
                        // Do nothing for nulls to blank them
 
-                    } else if ((prop == "keyboard_language" || prop == "idle_time") && data[prop] !== ""){
-                  smc_rows = smc_rows + '<tr><th>'+i18n.t('fan_temps.'+prop)+'</th><td>'+data[prop]+'</td></tr>';
+                    } else if (prop == "keyboard_language" && data[prop] !== ""){
+                        // Add flag after keyboard language
+                        let flagHtml = '';
+                        if (typeof window.getKeyboardLanguageFlag === 'function') {
+                            const flag = window.getKeyboardLanguageFlag(data[prop]);
+                            flagHtml = ' <span style="font-size: 1.1em; position: relative; top: 2px;" title="' + data[prop] + '">' + flag + '</span>';
+                        }
+                        smc_rows = smc_rows + '<tr><th>'+i18n.t('fan_temps.'+prop)+'</th><td>'+data[prop]+flagHtml+'</td></tr>';
+
+                    } else if (prop == "idle_time" && data[prop] !== ""){
+                        smc_rows = smc_rows + '<tr><th>'+i18n.t('fan_temps.'+prop)+'</th><td>'+data[prop]+'</td></tr>';
 
                     // Create fan speed table section
                     } else if (prop.startsWith("F") && prop.endsWith("Mn")){
@@ -121,9 +187,26 @@ $(document).on('appReady', function(){
                   smc_rows = smc_rows + '<tr><th><span title="'+i18n.t('fan_temps.sensorname')+": "+prop+'">'+i18n.t('fan_temps.'+local_prop)+'</span></th><td>'+i18n.t('enabled')+'</td></tr>';
                     } else if (prop == "HDBS" && parseInt(data[prop]) == "0"){
                   smc_rows = smc_rows + '<tr><th><span title="'+i18n.t('fan_temps.sensorname')+": "+prop+'">'+i18n.t('fan_temps.'+local_prop)+'</span></th><td>'+i18n.t('disabled')+'</td></tr>';
+                
+                } else if ((prop == "MSSD" || prop == "MSSP") && data[prop] == "12"){
+                  smc_rows = smc_rows + '<tr><th><span title="'+i18n.t('fan_temps.sensorname')+": "+prop+'">'+i18n.t('fan_temps.'+local_prop)+'</span></th><td>'+data[prop]+' - '+i18n.t('fan_temps.shutdown12')+'</td></tr>';
+                } else if ((prop == "MSSD" || prop == "MSSP") && data[prop] == "11"){
+                  smc_rows = smc_rows + '<tr><th><span title="'+i18n.t('fan_temps.sensorname')+": "+prop+'">'+i18n.t('fan_temps.'+local_prop)+'</span></th><td>'+data[prop]+' - '+i18n.t('fan_temps.shutdown11')+'</td></tr>';
+                } else if ((prop == "MSSD" || prop == "MSSP") && data[prop] == "10"){
+                  smc_rows = smc_rows + '<tr><th><span title="'+i18n.t('fan_temps.sensorname')+": "+prop+'">'+i18n.t('fan_temps.'+local_prop)+'</span></th><td>'+data[prop]+' - '+i18n.t('fan_temps.shutdown10')+'</td></tr>';
+                } else if ((prop == "MSSD" || prop == "MSSP") && data[prop] == "9"){
+                  smc_rows = smc_rows + '<tr><th><span title="'+i18n.t('fan_temps.sensorname')+": "+prop+'">'+i18n.t('fan_temps.'+local_prop)+'</span></th><td>'+data[prop]+' - '+i18n.t('fan_temps.shutdown9')+'</td></tr>';
+                } else if ((prop == "MSSD" || prop == "MSSP") && data[prop] == "8"){
+                  smc_rows = smc_rows + '<tr><th><span title="'+i18n.t('fan_temps.sensorname')+": "+prop+'">'+i18n.t('fan_temps.'+local_prop)+'</span></th><td>'+data[prop]+' - '+i18n.t('fan_temps.shutdown8')+'</td></tr>';
+                } else if ((prop == "MSSD" || prop == "MSSP") && data[prop] == "7"){
+                  smc_rows = smc_rows + '<tr><th><span title="'+i18n.t('fan_temps.sensorname')+": "+prop+'">'+i18n.t('fan_temps.'+local_prop)+'</span></th><td>'+data[prop]+' - '+i18n.t('fan_temps.shutdown7')+'</td></tr>';
+                } else if ((prop == "MSSD" || prop == "MSSP") && data[prop] == "6"){
+                  smc_rows = smc_rows + '<tr><th><span title="'+i18n.t('fan_temps.sensorname')+": "+prop+'">'+i18n.t('fan_temps.'+local_prop)+'</span></th><td>'+data[prop]+' - '+i18n.t('fan_temps.shutdown6')+'</td></tr>';
 
-                    } else if ((prop == "MSSD" || prop == "MSSP") && data[prop] == "5"){
+                } else if ((prop == "MSSD" || prop == "MSSP") && data[prop] == "5"){
                   smc_rows = smc_rows + '<tr><th><span title="'+i18n.t('fan_temps.sensorname')+": "+prop+'">'+i18n.t('fan_temps.'+local_prop)+'</span></th><td>'+data[prop]+' - '+i18n.t('fan_temps.shutdown5')+'</td></tr>';
+                } else if ((prop == "MSSD" || prop == "MSSP") && data[prop] == "4"){
+                  smc_rows = smc_rows + '<tr><th><span title="'+i18n.t('fan_temps.sensorname')+": "+prop+'">'+i18n.t('fan_temps.'+local_prop)+'</span></th><td>'+data[prop]+' - '+i18n.t('fan_temps.shutdown4')+'</td></tr>';
                     } else if ((prop == "MSSD" || prop == "MSSP") && data[prop] == "3"){
                   smc_rows = smc_rows + '<tr><th><span title="'+i18n.t('fan_temps.sensorname')+": "+prop+'">'+i18n.t('fan_temps.'+local_prop)+'</span></th><td>'+data[prop]+' - '+i18n.t('fan_temps.shutdown3')+'</td></tr>';
                     } else if ((prop == "MSSD" || prop == "MSSP") && data[prop] == "2"){
@@ -234,8 +317,8 @@ $(document).on('appReady', function(){
                 }
             }
 
-            // Only show and sort amps table if data exists
-            if (amps_rows !== ""){
+            // Build and append tables only if they have content
+            if (amps_rows) {
                 $('#amps-tab')
                     .append($('<h4>')
                         .append($('<i>')
@@ -246,11 +329,9 @@ $(document).on('appReady', function(){
                             .addClass('table table-striped table-condensed')
                             .append($('<tbody id="amps_table">')
                                 .append(amps_rows))))
-                sortTable_temps(amps_table);
             }
 
-            // Only show and sort volts table if data exists
-            if ( volts_rows !== ""){
+            if (volts_rows) {
                 $('#amps-tab')
                     .append($('<h4>')
                         .append($('<i>')
@@ -261,11 +342,9 @@ $(document).on('appReady', function(){
                             .addClass('table table-striped table-condensed')
                             .append($('<tbody id="volts_table">')
                                 .append(volts_rows))))
-                sortTable_temps(volts_table);
             }
 
-            // Only show and sort watts table if data exists
-            if ( watts_rows !== ""){
+            if (watts_rows) {
                 $('#amps-tab')
                     .append($('<h4>')
                         .append($('<i>')
@@ -276,33 +355,27 @@ $(document).on('appReady', function(){
                             .addClass('table table-striped table-condensed')
                             .append($('<tbody id="watts_table">')
                                 .append(watts_rows))))
-                sortTable_temps(watts_table);
             }
 
-            // Only show and sort smc table if data exists
-            if ( smc_rows !== ""){
+            if (smc_rows) {
                 $('#smc-tab')
                     .append($('<div style="max-width:575px;">')
                         .append($('<table>')
                             .addClass('table table-striped table-condensed')
                             .append($('<tbody id="smc_table">')
                                 .append(smc_rows))))
-                sortTable_temps(smc_table);
             }
 
-            // Only show and sort temps table if data exists
-            if ( temps_rows !== ""){
+            if (temps_rows) {
                 $('#temps-tab')
                     .append($('<div style="max-width:370px;">')
                         .append($('<table>')
                             .addClass('table table-striped table-condensed')
                             .append($('<tbody id="temps_table">')
                                 .append(temps_rows))))
-                sortTable_temps(temps_table);
             }
 
-            // Only show fan table if data exists, do not sort it
-            if ( fan_rows !== ""){
+            if (fan_rows) {
                 $('#fans-tab')
                     .append($('<div style="max-width:370px;">')
                         .append($('<table>')
